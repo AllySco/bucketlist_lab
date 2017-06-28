@@ -16,18 +16,20 @@ BucketQuery.prototype = {
       }
     })
   },
-  
+  add: function( activityToAdd, onQueryFinished) {
+    MongoClient.connect( this.url, function( err, db ){
+      if(db) {
+        var collection = db.collection("activities")
+        collection.insert(activityToAdd);
+        collection.find().toArray( function( err, docs) {
+          if (docs) {
+            onQueryFinished(docs);
+          }
+        })
+      }
+    })
+  }
 
 }
-
-
-
-
-
-
-
-
-
-
 
 module.exports = BucketQuery;

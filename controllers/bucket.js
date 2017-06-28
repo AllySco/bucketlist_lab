@@ -14,4 +14,15 @@ bucketRouter.get('/', function(req, res) {
   })
 })
 
+// add new activity
+bucketRouter.post('/', function(req, res) {
+  var newActivity = new Activity( {
+    country: req.body.country,
+    activityText: req.body.activityText
+  });
+  query.add( newActivity, function(docs) {
+    res.json(docs);
+  });
+});
+
 module.exports = bucketRouter;

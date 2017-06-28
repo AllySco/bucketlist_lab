@@ -89,11 +89,13 @@ var UI = function(){
   bucketActivities.all( function(allActivities) {
     this.render(allActivities);
   }.bind(this));
+  this.attachFormOnSubmit();
 }
 
 UI.prototype = {
   render: function(allActivities) {
       var container = document.querySelector("#bucket-list");
+      container.innerHTML = '';
       var ul = document.createElement("ul");
 
       for(activity of allActivities) {
@@ -102,6 +104,24 @@ UI.prototype = {
         ul.appendChild(li);
       }
       container.appendChild(ul);
+  },
+  attachFormOnSubmit: function() {
+    var form = document.getElementById('activity-input-form')
+    form.addEventListener('submit', function(event){
+      event.preventDefault();
+      var country = document.getElementById('select').value;
+      var activityText = form['activity-field'].value;
+
+      var activityToAdd = {
+        country: country,
+        activityText: activityText
+      }
+
+      var bucketActivites = new BucketActivities();
+      bucketActivites.add(activityToAdd, function(newData) {
+        this.render(newData);
+      }.bind(this))
+    }.bind(this))
   }
 }
 
@@ -155,7 +175,7 @@ populateCountriesDropdown: function(countries) {
   var select = document.querySelector("#select");
   for (country of countries) {
     var option = document.createElement( "option");
-    option.value = country.numericCode;
+    option.value = country.name;
     option.text = country.name;
     select.options.add(option);
   }
@@ -163,17 +183,15 @@ populateCountriesDropdown: function(countries) {
 
 findCountryByNumericCode: function(value, countries) {
   for (country of countries) {
-    if (country.numericCode == value ) {
+    if (country.name == value ) {
       return country;
     }
   }
 },
 
 createActivityInput: function(country) {
-  var formTag = document.createElement('form');
-  formTag.id = "activity-input-form";
-  formTag.method = "POST";
-  formTag.action = "/bucket"
+  var formTag = document.getElementById('activity-input-form');
+  formTag.innerHTML = '';
 
   var labelTag = document.createElement('label');
   labelTag.for = "activity-field"
@@ -182,7 +200,7 @@ createActivityInput: function(country) {
   var inputTag = document.createElement('input');
   inputTag.type = "text";
   inputTag.id = "activity-field";
-  inputTag.name = "activity"
+  inputTag.name = "activityText"
   inputTag.placeholder = "Why Not Bog Snorkling?";
 
   var submitButton = document.createElement('input');
@@ -194,7 +212,6 @@ createActivityInput: function(country) {
   formTag.appendChild(labelTag);
   formTag.appendChild(inputTag);
   formTag.appendChild(submitButton);
-  targetDiv.appendChild(formTag);
 }
 
 
@@ -226,6 +243,21 @@ BucketActivities.prototype = {
       this.makeRequest("http://localhost:3000/bucket", function(allActivities) {
         onActivitiesReady(allActivities);
       });
+  },
+  makePostRequest: function(url, onRequestComplete, payload) {
+      var request = new XMLHttpRequest();
+      request.open( 'POST', url);
+      request.setRequestHeader( "Content-Type", "application/json");
+      request.addEventListener( 'load', function() {
+        var jsonString = request.responseText;
+        var updatedActivities = JSON.parse(jsonString);
+        onRequestComplete(updatedActivities);
+      })
+      request.send(payload);
+  },
+  add: function(newActivity, callback) {
+    var jsonString = JSON.stringify(newActivity);
+    this.makePostRequest('http://localhost:3000/bucket', callback, jsonString);
   }
 
 }

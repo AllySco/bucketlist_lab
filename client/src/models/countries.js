@@ -40,7 +40,7 @@ populateCountriesDropdown: function(countries) {
   var select = document.querySelector("#select");
   for (country of countries) {
     var option = document.createElement( "option");
-    option.value = country.numericCode;
+    option.value = country.name;
     option.text = country.name;
     select.options.add(option);
   }
@@ -48,17 +48,15 @@ populateCountriesDropdown: function(countries) {
 
 findCountryByNumericCode: function(value, countries) {
   for (country of countries) {
-    if (country.numericCode == value ) {
+    if (country.name == value ) {
       return country;
     }
   }
 },
 
 createActivityInput: function(country) {
-  var formTag = document.createElement('form');
-  formTag.id = "activity-input-form";
-  formTag.method = "POST";
-  formTag.action = "/bucket"
+  var formTag = document.getElementById('activity-input-form');
+  formTag.innerHTML = '';
 
   var labelTag = document.createElement('label');
   labelTag.for = "activity-field"
@@ -67,7 +65,7 @@ createActivityInput: function(country) {
   var inputTag = document.createElement('input');
   inputTag.type = "text";
   inputTag.id = "activity-field";
-  inputTag.name = "activity"
+  inputTag.name = "activityText"
   inputTag.placeholder = "Why Not Bog Snorkling?";
 
   var submitButton = document.createElement('input');
@@ -79,7 +77,6 @@ createActivityInput: function(country) {
   formTag.appendChild(labelTag);
   formTag.appendChild(inputTag);
   formTag.appendChild(submitButton);
-  targetDiv.appendChild(formTag);
 }
 
 

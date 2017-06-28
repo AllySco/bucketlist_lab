@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>BucketList</title>
-<script src="bundle.js"></script>
+  <title>BucketList</title>
+  <script src="bundle.js"></script>
 </head>
 
 <body>
   <div id="dropDownDiv">
-  <select id="select"></select>
-  <div id="input"></div>
+    <form action="http://localhost:3000/bucket" id="activity-input-form" method="POST" >
+      <select name="country" id="select"></select>
+      <div id="input"></div>
+    </form>
   </div>
-
 
   <article id="bucket-list">
     <h2>My Bucket List</h2>
