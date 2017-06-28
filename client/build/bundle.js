@@ -126,7 +126,7 @@ createCountryDropdown: function(countries) {
   var value = event.target.selectedOptions[0].value;
   console.log("value", value);
   var country = this.findCountryByNumericCode( value, countries);
-  // createCountry(country);
+  this.createActivityInput(country);
   // saveCountry(country)   ADD MONGO HERE
 }.bind(this));
 
@@ -150,7 +150,37 @@ findCountryByNumericCode: function(value, countries) {
       return country;
     }
   }
+},
+
+createActivityInput: function(country) {
+  var formTag = document.createElement('form');
+  formTag.id = "activity-input-form";
+  formTag.method = "POST";
+  formTag.action = "/bucket"
+
+  var labelTag = document.createElement('label');
+  labelTag.for = "activity-field"
+  labelTag.innerText = "Activity"
+
+  var inputTag = document.createElement('input');
+  inputTag.type = "text";
+  inputTag.id = "activity-field";
+  inputTag.name = "activity"
+  inputTag.placeholder = "Why Not Bog Snorkling?";
+
+  var submitButton = document.createElement('input');
+  submitButton.type = "submit";
+  submitButton.value = "Add to Bucket List";
+
+  var targetDiv = document.querySelector("#input");
+
+  formTag.appendChild(labelTag);
+  formTag.appendChild(inputTag);
+  formTag.appendChild(submitButton);
+  targetDiv.appendChild(formTag);
 }
+
+
 }
 module.exports = CountryList;
 
