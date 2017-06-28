@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var path = require("path");
 
-
+router.use('/bucket', require('./bucket'));
 
 router.get("/", function(req, res) {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));

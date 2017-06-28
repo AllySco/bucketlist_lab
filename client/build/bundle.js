@@ -80,13 +80,30 @@ window.addEventListener('load', app);
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+var BucketActivities = __webpack_require__(3);
 
 var UI = function(){
-
-
+  var bucketActivities = new BucketActivities();
+  bucketActivities.all( function(allActivities) {
+    this.render(allActivities);
+  }.bind(this));
 }
 
+UI.prototype = {
+  render: function(allActivities) {
+      var container = document.querySelector("#bucket-list");
+      var ul = document.createElement("ul");
+
+      for(activity of allActivities) {
+        var li = document.createElement("li");
+        li.innerText = "Country: " +  activity.country + " - Activity: " + activity.activityText;
+        ul.appendChild(li);
+      }
+      container.appendChild(ul);
+  }
+}
 
 
 module.exports = UI;
@@ -183,6 +200,53 @@ createActivityInput: function(country) {
 
 }
 module.exports = CountryList;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Activity = __webpack_require__(4)
+
+var BucketActivities = function() {};
+
+BucketActivities.prototype = {
+  makeRequest: function(url, onRequestComplete) {
+    var request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.addEventListener("load", function() {
+      if(request.status !== 200) return;
+      var jsonString = request.responseText;
+      var resultsData = JSON.parse(jsonString);
+      onRequestComplete(resultsData);
+    })
+    request.send();
+  },
+  all: function(onActivitiesReady) {
+      this.makeRequest("http://localhost:3000/bucket", function(allActivities) {
+        onActivitiesReady(allActivities);
+      });
+  }
+
+}
+
+
+
+
+module.exports = BucketActivities;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+var Activity = function(options) {
+  this.country = options.country;
+  this.activityText = options.activityText;
+}
+
+
+module.exports = Activity;
 
 
 /***/ })
