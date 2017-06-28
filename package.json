@@ -1,0 +1,28 @@
+{
+  "name": "bucketlist_lab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": " cd client && webpack -w",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yamiacat/bucketlist_lab.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yamiacat/bucketlist_lab/issues"
+  },
+  "homepage": "https://github.com/yamiacat/bucketlist_lab#readme",
+  "devDependencies": {
+    "webpack": "^3.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
